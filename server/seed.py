@@ -8,23 +8,32 @@
 from faker import Faker
 
 # Local imports
-from config import app, func
+from config import app, func, re
 from models import db, User
 
 if __name__ == '__main__':
-    # fake = Faker()
+    fake = Faker()
     
     with app.app_context():
         print("Starting seed...")
                 # Seed code goes here!
-        # User.query.delete()
+        User.query.delete()
         
-        # new_user_1 = User(name='McTesterson')
-        # new_user_2 = User(name='McTestFace')
-        # new_user_3 = User(name='McTestJerk')
-        # users = [new_user_1, new_user_2, new_user_3]
-        # db.session.add_all(users)
-        # db.session.commit()
+        new_user_1 = User(name='McTesterson', password_hash='a1', email=fake.email())
+        new_user_2 = User(name='McTestFace', password_hash='a1',  email=fake.email())
+        new_user_3 = User(name = 'Bravo', password_hash = 'a1', email = fake.email())
+        new_user_4 = User(name='Charlie', password_hash='a1', email=fake.email())
+        new_user_5 = User(name='Delta', password_hash='a1', email=fake.email())
+        new_user_6 = User(name='Echo', password_hash='a1', email=fake.email())
+        new_user_7 = User(name='Golf', password_hash='a1', email=fake.email())
+        new_user_8 = User(name='Hotel', password_hash='a1', email=fake.email())
+        new_user_9 = User(name='India', password_hash='a1', email=fake.email())
+        new_user_10 = User(name='Juliet', password_hash='a1', email=fake.email())
+        new_user_11 = User(name='Kilo', password_hash='a1', email=fake.email())
+        new_user_12 = User(name='Lima', password_hash='a1', email=fake.email())
+        users = [new_user_1, new_user_2, new_user_3, new_user_4, new_user_5, new_user_6, new_user_7, new_user_8, new_user_9, new_user_10, new_user_11, new_user_12]
+        db.session.add_all(users)
+        db.session.commit()
         
                 
                 

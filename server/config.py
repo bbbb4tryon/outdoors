@@ -8,6 +8,7 @@ from flask_restful import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData, func
 from flask_bcrypt import Bcrypt
+import re
 
 # Local imports
 
