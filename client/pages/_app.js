@@ -1,5 +1,13 @@
 import "../styles/globals.css";
+// import BackgroundVideo from "./pages/backgroundvideo.js";
 
-export default function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+function MyApp({ Component, pageProps }) {
+  return (
+    <>
+      {/* <BackgroundVideo /> */}
+      <Component {...pageProps} />
+    </>
+  );
 }
+
+export default MyApp;

@@ -1,0 +1,139 @@
+import { useState, useEffect } from "react";
+import styles from "../styles/Home.module.css";
+import axios from "axios";
+
+export default function Baselayer() {
+  const [hotImageUrl, setHotImageUrl] = useState("");
+  const [coolImageUrl, setCoolImageUrl] = useState("");
+  const [coldImageUrl, setColdImageUrl] = useState("");
+
+  useEffect(() => {
+    // Fetch a random image for each category from the Unsplash API
+    const fetchData = async () => {
+      const hotResponse = await fetchImageWithCaching("hot");
+      const coolResponse = await fetchImageWithCaching("cool");
+      const coldResponse = await fetchImageWithCaching("cold");
+
+      setHotImageUrl(hotResponse);
+      setCoolImageUrl(coolResponse);
+      setColdImageUrl(coldResponse);
+    };
+
+    fetchData();
+  }, []);
+
+  const fetchImageWithCaching = async (weather) => {
+    const cachedImage = localStorage.getItem(`${weather.toUpperCase()}_KEY`);
+
+    if (cachedImage) {
+      return cachedImage;
+    } else {
+      const imageQuery = `hiking ${weather}-weather baselayers`;
+      const unsplashApiUrl = `https://api.unsplash.com/photos/random?query=${imageQuery}&client_id=popkj0bidxB2TlYhKXMDnbDLTnfkxnYjnKfQN3omHgM`;
+
+      const response = await axios.get(unsplashApiUrl);
+      const imageUrl = response.data.urls.regular;
+
+      localStorage.setItem(`${weather.toUpperCase()}_KEY`, imageUrl);
+      localStorage.setItem(`${weather.toUpperCase()}_TIME`, Date.now());
+
+      return imageUrl;
+    }
+  };
+
+  const handleUserLandingPageClick = (imageUrl, weather) => {
+    const cachedImage = localStorage.getItem(`${weather.toUpperCase()}_KEY`);
+    const cachedTime = localStorage.getItem(`${weather.toUpperCase()}_TIME`);
+
+    if (
+      cachedImage &&
+      cachedTime &&
+      Date.now() - cachedTime < 43200000 // 12 hours in milliseconds
+    ) {
+      const message = `Exemplar baselayers for ${weather}-weather outdoor activities: ${cachedImage}`;
+      showModal(cachedImage, message);
+    } else {
+      fetchImageWithCaching(weather).then((imageUrl) => {
+        const message = `Exemplar baselayers for  ${weather}-weather outdoor activities: ${imageUrl}`;
+        showModal(imageUrl, message);
+      });
+    }
+  };
+
+  const showModal = (imageUrl, message) => {
+    const modal = document.createElement("div");
+    modal.style.position = "fixed";
+    modal.style.top = 0;
+    modal.style.right = 0;
+    modal.style.bottom = 0;
+    modal.style.left = 0;
+    modal.style.display = "flex";
+    modal.style.alignItems = "center";
+    modal.style.justifyContent = "center";
+    modal.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    modal.addEventListener("click", () => {
+      document.body.removeChild(modal);
+    });
+
+    const img = document.createElement("img");
+    img.src = imageUrl;
+    img.style.maxWidth = "100%";
+    img.style.maxHeight = "100%";
+    img.style.objectFit = "contain";
+
+    const content = document.createElement("div");
+    content.style.backgroundColor = "white";
+    content.style.padding = "1rem";
+    content.style.borderRadius = "0.5rem";
+    content.style.boxShadow = "0 0 1rem rgba(0, 0, 0, 0.5)";
+    content.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    const p = document.createElement("p");
+    p.textContent = message;
+
+    content.appendChild(img);
+    content.appendChild(p);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+  };
+
+
+// export default function MyComponent() {
+//   // component code here
+// }
+  return (
+    <div>
+      <h1 className={styles.title}>Enter the Outdoors!</h1>
+
+      <div className={styles.grid}>
+        <div
+          className={styles.card}
+          onClick={() => handleUserLandingPageClick(hotImageUrl, "hot")}
+        >
+          <img src={hotImageUrl} alt="Hot" />
+          <h3>Is it hot? &rarr;</h3>
+          <p>Click to see activity baselayers for hot weather</p>
+        </div>
+        <div
+          className={styles.card}
+          onClick={() => handleUserLandingPageClick(coolImageUrl, "mild")}
+        >
+          <img src={coolImageUrl} alt="Mild" />
+          <h3>Is it cool? &rarr;</h3>
+          <p>Click to see activity baselayers for mild weather</p>
+        </div>
+        <div
+          className={styles.card}
+          onClick={() => handleUserLandingPageClick(coldImageUrl, "cold")}
+        >
+          <img src={coldImageUrl} alt="Cold" />
+          <h3>Is it cold? &rarr;</h3>
+          <p>Click to see activity baselayers for cold weather</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+          

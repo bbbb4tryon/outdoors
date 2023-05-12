@@ -1,0 +1,27 @@
+import { getSession } from "next-auth/client";
+import prisma from "../../lib/prisma";
+
+export default async function userlog(req, res) {
+  const session = await getSession({ req });
+  if (!session) {
+    return res.status(401).send("Unauthorized");
+  }
+
+  if (req.method === "POST") {
+    const { emotionalGauge, relaxationGauge } = req.body;
+    const { user } = session;
+    await prisma.dataLog.create({
+      data: {
+        emotional_gauge: emotionalGauge,
+        relaxation_gauge: relaxationGauge,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    });
+    res.status(200).send("Data logged successfully!");
+    
+  }
+}

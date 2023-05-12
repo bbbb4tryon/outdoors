@@ -1,7 +1,4 @@
-To get started, you can create a pages/index.js file in your Next.js project to represent the landing page of your application. This page can contain a login form with inputs for the user's username and password, and a submit button. When the user clicks the submit button, you can use the fetch API to send a POST request to your Flask backend with the user's login credentials.
+As a user of the Next.js application, I want to be able to search for destinations and view information about each destination, such as the current weather conditions and the weather forecast for the next few hours. I also want to be able to log my emotional and relaxation gauges after each activity, and have that data persist with my session or ID so that I can view it later. Additionally, I want the application to provide a smooth and interactive user experience with subtle animations and interactive elements that enhance the overall usability of the application.
 
-On the Flask backend, you can create a route to handle this POST request, authenticate the user, and store their information in the backend. You can use a session-based authentication system to keep track of whether the user is logged in or not.
-
-Once the user is authenticated, you can redirect them to a user home page in your Next.js frontend. This page can use the fetch API to retrieve the user's past input data from the Flask backend, and display it on the page.
-
-To handle the other pages in your application, you can create additional pages in your Next.js project with their own routes and components. Each page can use the fetch API to retrieve and display data from the Flask backend.
+signup.js:
+fetch('/signupUser') to the backend

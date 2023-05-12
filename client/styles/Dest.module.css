@@ -1,0 +1,42 @@
+.destCard {
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    /* adjust the number of rows as needed */
+    justify-content: center;
+    border: 2px solid blue;
+    padding: 20px;
+    transition: all 0.2s ease-in-out;
+}
+
+.destCard:hover {
+    background-color: lightblue;
+    cursor: pointer;
+}
+
+.destCard h3 {
+    margin: 0;
+}
+
+.destCard p {
+    margin: 0;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+    .destCard {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .destCard h3 {
+        width: 200px;
+        text-align: right;
+        margin-right: 1rem;
+    }
+
+    .destCard p {
+        flex: 1;
+        text-align: left;
+    }
+}

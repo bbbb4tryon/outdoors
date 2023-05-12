@@ -1,0 +1,30 @@
+import React from "react";
+import styles from "../styles/BackgroundVideo.module.css";
+
+function BackgroundVideo({ video, children }) {
+  const videoRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!videoRef.current) return;
+
+    videoRef.current.addEventListener("loadedmetadata", () => {
+      videoRef.current.play();
+    });
+  }, []);
+
+  return (
+    <div className={styles.container}>
+      <video
+        ref={videoRef}
+        src={video}
+        muted
+        loop
+        playsInline
+        className={styles.video}
+      />
+      {children}
+    </div>
+  );
+}
+
+export default BackgroundVideo;

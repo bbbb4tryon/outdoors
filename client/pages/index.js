@@ -1,91 +1,85 @@
-// PATH: client/pages/index.js
-
-// import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import styles from "../styles/Home.module.css";
-
 import { useState } from "react";
+import Signup from "./signup";
+import HomeGrid from "./homepage";
 
-const inter = Inter({ subsets: ["latin"] });
+export default function Index() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
 
-const Index = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const createUser = async () => {
+    try {
+      const response = await fetch("/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await response.json();
+      if (response.status === 200) {
+        setLoggedIn(true);
+        setUser(data);
+      } else {
+        setErrorMessage(data.error);
+      }
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Something went wrong: index.js");
+    }
+  };
+// #reroute to signup page
+  const login = async () => {
+    try {
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, password }),
+      });
+      const data = await response.json();
+      if (response.status === 200) {
+        setLoggedIn(true);
+        setUser(data);
+      } else {
+        setErrorMessage("Invalid login");
+      }
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Something went wrong:login index"  );
+    }
   };
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
+  const checkLogin = async () => {
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const responseData = await response.json();
-      console.log(responseData);
-      // Redirect to the user home page after successful login
-      // For example: router.push("/userhome");
+      const response = await fetch("/checklogin");
+      const data = await response.json();
+      if (response.status === 200) {
+        setLoggedIn(true);
+        setUser(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await fetch("/logout", { method: "DELETE" });
+      setLoggedIn(false);
+      setUser(null);
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <>
-      {/* <Head>
-        <title>My App - Login</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head> */}
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>Login</h1>
-        <form className={styles.form} onSubmit={handleFormSubmit}>
-          <label className={styles.label}>
-            Username:
-            <input
-              className={styles.input}
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <label className={styles.label}>
-            Password:
-            <input
-              className={styles.input}
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          <button className={styles.button} type="submit">
-            Submit
-          </button>
-        </form>
-      </main>
-    </>
+    <div>
+ 
+      
+      {/* <Signup /> */}
+      <HomeGrid />
+    </div>
   );
-};
-
-export default Index;
-// we use the useState hook to initialize the formData object with username and password properties. We also add an onChange event handler to the input fields to update the formData state when the user types in the input fields.
-
-// We modify the handleSubmit function to use the /api/login endpoint instead of /submit, which is more descriptive of its purpose. We also add a console.log statement to log the response data to the console.
-
-// Finally, we add a handleFormSubmit function to handle the form submission event. This function sends a POST request to the /api/login endpoint with the formData object in the request body. On successful login, you can use Next.js router to redirect the user to the desired page.
+}
+     
